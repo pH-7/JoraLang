@@ -8,11 +8,14 @@
 #ifndef JORA_PARSER_H_INCLUDED
 #define JORA_PARSER_H_INCLUDED
 
+#include <iostream>
 #include <algorithm>
 #include <string>
 #include <set>
 #include <vector>
 #include <list>
+#include "Lexer.hpp"
+#include "Operator.hpp"
 
 
 namespace JoraLang

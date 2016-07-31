@@ -1,3 +1,9 @@
+//
+// JoraLang
+//
+//  Created by Pierre-Henry Soria on 31/07/2016.
+//  Copyright © 2016 Pierre-Henry Soria. All rights reserved.
+//
 
 #include <cstdlib> // C library
 #include <cstring> // C library
@@ -6,13 +12,13 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Core.hpp"
-#include "Parser.hpp"
+#include "JoraLang/Core.hpp"
+#include "JoraLang/Parser.hpp"
+#include "JoraLang/Lexer.hpp"
 
 using namespace std;
 using namespace JoraLang;
 
-// Main program entry point
 int main(int argc, char *argv[]) {
     try
     {
@@ -21,7 +27,6 @@ int main(int argc, char *argv[]) {
         
         if( argc > 1 )
         {
-            
             if (!strcmp(argv[1], "-V") || !strcmp(argv[1], "-version"))
             {
                 cout << Core::softwareVersion();
@@ -51,6 +56,7 @@ int main(int argc, char *argv[]) {
                     {
                         getline(iFile, input);
                         Parser sequence( seq.get(input) );
+                        Lexer::interpret(sequence);
                     }
                 }
                 else
@@ -68,6 +74,7 @@ int main(int argc, char *argv[]) {
                 cout << ">>> ";
                 getline(cin, input);
                 Parser sequence( seq.get(input) );
+                Lexer::interpret(sequence);
                 cout << endl;
             }
         }
