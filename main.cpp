@@ -1,3 +1,9 @@
+//
+// JoraLang
+//
+//  Created by Pierre-Henry Soria on 31/07/2016.
+//  Copyright © 2016 Pierre-Henry Soria. All rights reserved.
+//
 
 #include <cstdlib> // C library
 #include <cstring> // C library
@@ -8,6 +14,7 @@
 #include <vector>
 #include "Core.hpp"
 #include "Parser.hpp"
+#include "Lexer.hpp"
 
 using namespace std;
 using namespace JoraLang;
@@ -18,10 +25,10 @@ int main(int argc, char *argv[]) {
     {
         Parser seq;
         string input;
-        
+
         if( argc > 1 )
         {
-            
+
             if (!strcmp(argv[1], "-V") || !strcmp(argv[1], "-version"))
             {
                 cout << Core::softwareVersion();
@@ -51,6 +58,7 @@ int main(int argc, char *argv[]) {
                     {
                         getline(iFile, input);
                         Parser sequence( seq.get(input) );
+                        Lexer::interpret(sequence);
                     }
                 }
                 else
@@ -68,6 +76,7 @@ int main(int argc, char *argv[]) {
                 cout << ">>> ";
                 getline(cin, input);
                 Parser sequence( seq.get(input) );
+                Lexer::interpret(sequence);
                 cout << endl;
             }
         }
@@ -77,11 +86,11 @@ int main(int argc, char *argv[]) {
     {
         cerr << text << endl;
     }
-    catch (int const& digit)
+    catch (int digit)
     {
         cerr << "Integer Exception: " << digit << endl;
     }
-    catch (double const& digit)
+    catch (double digit)
     {
         cerr << "Double Exception: " << digit << endl;
     }
