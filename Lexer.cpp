@@ -6,6 +6,7 @@
 //
 
 #include "Lexer.hpp"
+#include <stdexcept>
 
 using namespace std;
 
@@ -16,17 +17,14 @@ namespace JoraLang
 
     void Lexer::interpret( Parser& seq )
     {
-        bool ok = true; // Default value
-
-        while( ok && !seq.empty() ) {
-            while ( (seq.cur() == "#" && !seq.isNext("\n")) ) seq.next(); // Ignore comments
-            if(seq.cur() == "say") {
-              cout << "Hello World!" << endl;
-              return;
-            } else if( seq.cur()== "=" && !seq.isNext( LEFT_TAG ) ) {
-                // nothing now
+        while (!seq.empty()) {
+            const string token = seq.cur();
+            seq.next();
+            if (token == "say") {
+                cout << "Hello World!" << endl;
+            } else {
+                throw runtime_error("Unsupported token: " + token);
             }
-
         }
     }
 }

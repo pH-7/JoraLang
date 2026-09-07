@@ -7,6 +7,8 @@
 //
 
 #include "Parser.hpp"
+#include <cctype>
+#include <stdexcept>
 
 using namespace std;
 
@@ -34,7 +36,11 @@ namespace JoraLang
 
         for( unsigned int i=0; i<src.length(); i++ )
         {
-            if( src[i] == ',' ) {
+            // Each input string is one line; a comment consumes its remainder.
+            if (src[i] == '#') {
+                break;
+            }
+            if (src[i] == ',' || std::isspace(static_cast<unsigned char>(src[i]))) {
                 if( !work.empty() ) {
                     toks.push_back(work);
                     work = "";
@@ -80,6 +86,9 @@ namespace JoraLang
 
     string Parser::cur() const
     {
+        if (empty()) {
+            throw out_of_range("No current token");
+        }
         return m_tokens.front();
     }
 
@@ -92,7 +101,7 @@ namespace JoraLang
     bool Parser::find(const string& str)
     {
         list<string>::iterator findIter = ::find(m_tokens.begin(), m_tokens.end(), str);
-        return (*findIter == str);
+        return findIter != m_tokens.end();
     }
 
     bool Parser::isFront(string t) const

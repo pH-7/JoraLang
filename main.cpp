@@ -54,16 +54,20 @@ int main(int argc, char *argv[]) {
                 ifstream iFile( argv[1] );
                 if( iFile.is_open() )
                 {
-                    while( !iFile.eof() )
+                    while (getline(iFile, input))
                     {
-                        getline(iFile, input);
                         Parser sequence( seq.get(input) );
                         Lexer::interpret(sequence);
+                    }
+                    if (iFile.bad()) {
+                        cerr << "Failed to read input file" << endl;
+                        return EXIT_FAILURE;
                     }
                 }
                 else
                 {
                     cerr << "Couldn't open file '" + (string)argv[1] + "'" << endl;
+                    return EXIT_FAILURE;
                 }
                 iFile.close();
             }
@@ -71,16 +75,18 @@ int main(int argc, char *argv[]) {
         else
         {
             cout << Core::softwareInfo();
-            while(1)
+            while (cout << ">>> " && getline(cin, input))
             {
-                cout << ">>> ";
-                getline(cin, input);
                 Parser sequence( seq.get(input) );
                 Lexer::interpret(sequence);
                 cout << endl;
             }
+            if (cin.bad()) {
+                cerr << "Failed to read standard input" << endl;
+                return EXIT_FAILURE;
+            }
         }
-        return 0;
+        return EXIT_SUCCESS;
     }
     catch (string const& text)
     {
@@ -102,4 +108,5 @@ int main(int argc, char *argv[]) {
     {
         cerr << e.what() << endl;
     }
+    return EXIT_FAILURE;
 }
