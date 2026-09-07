@@ -45,3 +45,7 @@ Thumbs.db
 # Mac OS 
 .DS_Store*
 ._*
+
+# Local interpreter build and Python test cache
+/JoraLang
+__pycache__/
