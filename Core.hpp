@@ -10,13 +10,14 @@
 #define Core_hpp
 
 #include <iostream>
+#include <string>
 
 namespace JoraLang
 {
     class Core
     {
         public:
-        static const char* VERSION;
+        static const char* const VERSION;
         static const std::string NAME;
         static std::string softwareInfo();
         static std::string softwareVersion();
