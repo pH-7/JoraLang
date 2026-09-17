@@ -18,10 +18,10 @@ sh compile.sh
 ./JoraLang -help           # Also -version, -license and -credits
 ```
 
-The build helper works from any directory and honours `CXX` (for example,
-`CXX=clang++ sh compile.sh`). It stops when compilation fails.
+The build helper works from any directory and honours `CXX` and `CXXFLAGS` (for
+example, `CXX=clang++ sh compile.sh`). It stops when compilation fails.
 
-Example `example.jora`:
+The bundled `example.jora`:
 
 ```text
 # Comments continue to the end of the line.
@@ -45,7 +45,16 @@ python3 -m unittest discover -s tests -v
 
 The tests compile into a temporary directory and cover CLI termination, script
 input, comments, error locations, argument validation, information flags and
-parser boundaries.
+parser boundaries. They honour `CXX` and `CXXFLAGS` as well, so the whole suite
+can be run instrumented:
+
+```sh
+CXX=clang++ CXXFLAGS="-fsanitize=address,undefined" \
+    python3 -m unittest discover -s tests
+```
+
+Every push builds and runs the suite on Linux (GCC and Clang) and macOS via
+GitHub Actions, and on Codeberg via Woodpecker.
 
 
 ## Author

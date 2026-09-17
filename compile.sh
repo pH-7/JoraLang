@@ -8,5 +8,6 @@
 
 set -eu
 cd "$(dirname "$0")"
-"${CXX:-c++}" -std=c++11 -Wall -Wextra -pedantic \
+# CXXFLAGS is intentionally unquoted so callers can pass several flags.
+"${CXX:-c++}" -std=c++11 -Wall -Wextra -pedantic ${CXXFLAGS:-} \
     Core.cpp Lexer.cpp Parser.cpp main.cpp -o JoraLang

@@ -1,0 +1,28 @@
+# Codeberg CI (Woodpecker). Mirrors the GitHub Actions "test" job.
+when:
+  - event: [push, pull_request, manual]
+
+steps:
+  - name: gcc
+    image: debian:stable-slim
+    environment:
+      CXX: g++
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends g++ python3
+      - sh compile.sh
+      - ./JoraLang example.jora
+      - python3 -m unittest discover -s tests -v
+
+  - name: clang
+    image: debian:stable-slim
+    environment:
+      CXX: clang++
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends clang python3
+      - sh compile.sh
+      - ./JoraLang example.jora
+      - python3 -m unittest discover -s tests -v

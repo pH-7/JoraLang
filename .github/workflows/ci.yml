@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / ${{ matrix.cxx }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cxx: g++ }
+          - { os: ubuntu-latest, cxx: clang++ }
+          - { os: macos-latest, cxx: clang++ }
+    env:
+      CXX: ${{ matrix.cxx }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Build
+        run: sh compile.sh
+
+      - name: Run the example script
+        run: ./JoraLang example.jora
+
+      - name: Test
+        run: python3 -m unittest discover -s tests -v
+
+  sanitizers:
+    name: ubuntu-latest / clang++ / asan+ubsan
+    runs-on: ubuntu-latest
+    # The suite passes under these sanitizers on macOS/clang. Linux additionally
+    # turns on LeakSanitizer, which has never run against this code, so for now
+    # the job reports without blocking. Drop this line once it has passed once.
+    continue-on-error: true
+    env:
+      CXX: clang++
+      CXXFLAGS: -fsanitize=address,undefined -fno-sanitize-recover=all -g
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Test under sanitizers
+        run: python3 -m unittest discover -s tests -v

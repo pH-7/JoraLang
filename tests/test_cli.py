@@ -1,6 +1,7 @@
 """Regression checks using only Python's standard library and a C++ compiler."""
 import os
 from pathlib import Path
+import shlex
 import subprocess
 import tempfile
 import unittest
@@ -16,7 +17,8 @@ class InterpreterTests(unittest.TestCase):
         cls.workspace = Path(cls.directory.name)
         cls.binary = cls.workspace / "JoraLang"
         cls.parser_check = cls.workspace / "parser-check"
-        compiler = [os.environ.get("CXX", "c++"), "-std=c++11", "-Wall", "-Wextra", "-pedantic"]
+        compiler = ([os.environ.get("CXX", "c++"), "-std=c++11", "-Wall", "-Wextra", "-pedantic"]
+                    + shlex.split(os.environ.get("CXXFLAGS", "")))
         subprocess.run(compiler + [str(ROOT / p) for p in
                        ("Core.cpp", "Lexer.cpp", "Parser.cpp", "main.cpp")] +
                        ["-o", str(cls.binary)], check=True)
