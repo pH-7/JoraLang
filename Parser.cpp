@@ -29,12 +29,12 @@ namespace JoraLang
 
     }
 
-    tokenList Parser::get(string src)
+    tokenList Parser::get(const string& src)
     {
         tokenList toks;
         string work;
 
-        for( unsigned int i=0; i<src.length(); i++ )
+        for( string::size_type i=0; i<src.length(); i++ )
         {
             // Each input string is one line; a comment consumes its remainder.
             if (src[i] == '#') {
@@ -69,7 +69,7 @@ namespace JoraLang
         m_tokens.insert(m_tokens.end(), l.begin(), l.end());
     }
 
-    void Parser::append(string tok)
+    void Parser::append(const string& tok)
     {
         m_tokens.push_back(tok);
     }
@@ -98,18 +98,19 @@ namespace JoraLang
         return !empty();
     }
 
-    bool Parser::find(const string& str)
+    bool Parser::find(const string& str) const
     {
-        list<string>::iterator findIter = ::find(m_tokens.begin(), m_tokens.end(), str);
-        return findIter != m_tokens.end();
+        return std::find(m_tokens.begin(), m_tokens.end(), str) != m_tokens.end();
     }
 
-    bool Parser::isFront(string t) const
+    // The front token is the one cur() returns; a single token is still a front one.
+    bool Parser::isFront(const string& t) const
     {
-        return (!checkSize()) ? false : t == *(--m_tokens.end());
+        return empty() ? false : t == m_tokens.front();
     }
 
-    bool Parser::isNext(string t) const
+    // The next token only exists once something follows the front one.
+    bool Parser::isNext(const string& t) const
     {
         return (!checkSize()) ? false : t == *(++m_tokens.begin());
     }

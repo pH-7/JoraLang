@@ -24,16 +24,16 @@ namespace JoraLang
         Parser();
         Parser( const tokenList& );
         void parse();
-        tokenList get(std::string);
+        static tokenList get( const std::string& );
         void append( const tokenList& );
-        void append( std::string tok );
+        void append( const std::string& tok );
         void clear();
         bool empty() const;
         std::string cur() const;
         bool next();
-        bool find(const std::string&);
-        bool isFront( std::string ) const;
-        bool isNext( std::string ) const;
+        bool find( const std::string& ) const;
+        bool isFront( const std::string& ) const;
+        bool isNext( const std::string& ) const;
         
         protected:
         bool checkSize() const;
