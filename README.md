@@ -15,7 +15,7 @@ A C++11 compiler is required. There are no external library dependencies.
 sh compile.sh
 ./JoraLang                 # Interactive input; EOF exits (Ctrl-D on Unix)
 ./JoraLang example.jora    # Execute a text file
-./JoraLang -help
+./JoraLang -help           # Also -version, -license and -credits
 ```
 
 The build helper works from any directory and honours `CXX` (for example,
@@ -29,8 +29,13 @@ say
 say, say
 ```
 
-Whitespace and commas separate instructions. Unknown tokens, unreadable files
-and interpreter errors return a nonzero exit status; empty input is allowed.
+Whitespace and commas separate instructions. Empty input is allowed.
+
+Exactly one argument is accepted: either an information flag or a script. A
+nonzero exit status is returned for an unknown token, an unrecognised option, a
+missing or unreadable file, a directory given in place of a script, more than
+one argument, and any other interpreter error. An error in a script reports the
+file and line it came from, and stops the run at that point.
 
 ## Validation
 
@@ -38,8 +43,9 @@ and interpreter errors return a nonzero exit status; empty input is allowed.
 python3 -m unittest discover -s tests -v
 ```
 
-The tests compile into a temporary directory and cover CLI termination,
-script input, comments, missing files, information flags and parser boundaries.
+The tests compile into a temporary directory and cover CLI termination, script
+input, comments, error locations, argument validation, information flags and
+parser boundaries.
 
 
 ## Author

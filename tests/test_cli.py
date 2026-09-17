@@ -64,6 +64,48 @@ class InterpreterTests(unittest.TestCase):
                 self.assertEqual(result.returncode, 0)
                 self.assertTrue(result.stdout.strip())
 
+    def test_information_flags_use_unix_line_endings(self):
+        for flag in ("-V", "-version", "-H", "-help", "-license", "-credits"):
+            with self.subTest(flag=flag):
+                self.assertNotIn("\r", self.run_cli(flag).stdout)
+
+    def test_help_documents_every_accepted_flag(self):
+        help_text = self.run_cli("-help").stdout
+        for flag in ("-V", "-version", "-H", "-help", "-license", "-credits"):
+            with self.subTest(flag=flag):
+                self.assertIn(flag, help_text)
+
+    def test_unknown_option_is_not_treated_as_a_file(self):
+        result = self.run_cli("--help")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Unknown option '--help'", result.stderr)
+        self.assertNotIn("Couldn't open file", result.stderr)
+
+    def test_extra_arguments_are_rejected(self):
+        script = self.workspace / "extra.jora"
+        script.write_text("say\n", encoding="utf-8")
+        result = self.run_cli(script, script)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertEqual(result.stdout, "")
+        self.assertIn("at most one argument", result.stderr)
+
+    def test_directory_is_rejected(self):
+        result = self.run_cli(ROOT / "tests")
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("is a directory", result.stderr)
+
+    def test_script_error_reports_file_and_line(self):
+        script = self.workspace / "broken.jora"
+        script.write_text("say\n\nbogus\nsay\n", encoding="utf-8")
+        result = self.run_cli(script)
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("{}:3: Unsupported token: bogus".format(script), result.stderr)
+        # Execution stops at the bad line instead of running the rest.
+        self.assertEqual(result.stdout.count("Hello World!"), 1)
+
+    def test_shell_output_ends_with_a_newline(self):
+        self.assertTrue(self.run_cli(input="say\n").stdout.endswith("\n"))
+
     def test_parser_boundaries(self):
         subprocess.run([str(self.parser_check)], check=True, timeout=2)
 
