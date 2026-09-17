@@ -47,7 +47,7 @@ namespace JoraLang
     
     string Core::showLicense()
     {
-        return "See here: https://github.com/pH-7/JoraLang/blob/master/LICENSE\n";
+        return "See here: https://github.com/pH-7/JoraLang/blob/main/LICENSE\n";
     }
     
     string Core::showCredits()
