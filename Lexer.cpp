@@ -12,8 +12,8 @@ using namespace std;
 
 namespace JoraLang
 {
-    string Lexer::LEFT_TAG = "(";
-    string Lexer::RIGHT_TAG = ")";
+    const string Lexer::LEFT_TAG = "(";
+    const string Lexer::RIGHT_TAG = ")";
 
     void Lexer::interpret( Parser& seq )
     {

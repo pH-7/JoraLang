@@ -19,8 +19,8 @@ namespace JoraLang
         public:
         static void interpret(Parser&);
 
-        static std::string LEFT_TAG;
-        static std::string RIGHT_TAG;
+        static const std::string LEFT_TAG;
+        static const std::string RIGHT_TAG;
     };
 }
 
