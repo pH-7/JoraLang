@@ -53,8 +53,8 @@ CXX=clang++ CXXFLAGS="-fsanitize=address,undefined" \
     python3 -m unittest discover -s tests
 ```
 
-Every push builds and runs the suite on Linux (GCC and Clang) and macOS via
-GitHub Actions, and on Codeberg via Woodpecker.
+CI configuration is included for GitHub Actions (Linux with GCC and Clang, and
+macOS) and for Codeberg's Woodpecker.
 
 
 ## Author
